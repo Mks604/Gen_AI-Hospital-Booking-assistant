@@ -3,36 +3,51 @@
 📌 Overview
 
 This project is a fully automated Hospital Appointment Booking System built using n8n.
+
 It simulates real-world booking scenarios and handles:
 
 ✅ Appointment validation
+
 ⚠️ Missing data detection
+
 🔁 Duplicate slot prevention
+
 📩 Real-time notifications (Telegram + Gmail)
 
 ⚡ Key Highlights
+
 ✨ No-code + low-code automation
+
 🧠 Smart validation logic
+
 🔄 Duplicate detection using memory
+
 📡 Webhook-based API system
+
 📲 Multi-channel notifications
 
-<img width="916" height="917" alt="image" src="https://github.com/user-attachments/assets/9bb85e33-98b1-44b6-bfa6-ad8f44148edd" />
+
 
 🔄 How It Works (Step-by-Step)
+
 1️⃣ Webhook Trigger
 
 API Endpoint:
 
 POST /webhook/book-appointment
+
 Starts the workflow
+
 2️⃣ Load Test Users
 
 Simulates 3 scenarios:
 
 ✅ Valid booking
+
 ⚠️ Missing field
+
 🔁 Duplicate booking
+
 3️⃣ Validation Node
 
 Checks required fields:
@@ -46,15 +61,23 @@ Phone
 👉 Missing fields → Error Flow
 
 4️⃣ Error Flow
+
 Sends alert via:
+
 📲 Telegram
+
 📧 Gmail
 
 5️⃣ Slot Check Logic
+
 Uses global workflow storage
+
 Checks:
+
 Doctor
+
 Date
+
 Time
 
 6️⃣ Decision Outcomes
@@ -66,12 +89,15 @@ Time
 
 
 📩 Notification System
+
 📲 Telegram
+
 Instant alerts
 Booking confirmations
 Duplicate warnings
 
 📧 Gmail
+
 Error reports
 Appointment confirmations
 Duplicate notifications
@@ -86,6 +112,7 @@ Duplicate notifications
 }
 
 📦 Project Structure
+
 hospital-appointment-n8n/
 │
 ├── README.md
@@ -105,19 +132,23 @@ hospital-appointment-n8n/
 ⚙️ Setup Instructions
 
 🔧 Step 1: Import Workflow
+
 Open n8n
 Click Import
 Paste JSON file
 
 🔐 Step 2: Configure Credentials
+
 Telegram Bot API
 Gmail OAuth2
 
 ▶️ Step 3: Activate Workflow
+
 Enable workflow
 Copy webhook URL
 
 🧪 Step 4: Test API
+
 curl -X POST http://localhost:5678/webhook/book-appointment
 
 📌 Important Notes
@@ -131,3 +162,6 @@ curl -X POST http://localhost:5678/webhook/book-appointment
 Kumar K
 
 ⭐ Show Your Support
+
+<img width="2273" height="2243" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/e82599b5-92a5-44cd-a857-9334beeb86a5" />
+
