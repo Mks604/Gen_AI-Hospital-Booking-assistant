@@ -1,0 +1,371 @@
+{
+  "name": "Hospital Appointment System - Full Working Final",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "book-appointment",
+        "options": {}
+      },
+      "id": "320f48a3-c770-4845-b175-9ca427873c7e",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -5264,
+        -320
+      ],
+      "webhookId": "e779a92a-c419-43b9-aeb3-da3c876b8914"
+    },
+    {
+      "parameters": {
+        "functionCode": "// AUTO RESET storage on every trigger\nconst store = this.getWorkflowStaticData('global');\nstore.bookings = [];\n\n// Return all 3 users as separate items\nreturn [\n  { json: { name: 'Rahul Sharma', doctor: 'Dr. Mehta', date: '2026-04-05', time: '10:00 AM', phone: '9876543210' } },\n  { json: { name: 'Priya Nair',   doctor: 'Dr. Mehta', date: '2026-04-05', time: '10:00 AM', phone: '9123456780' } },\n  { json: { name: 'Arjun Kumar',  doctor: 'Dr. Mehta', date: '2026-04-05', time: '10:00 AM', phone: '' } }\n];"
+      },
+      "id": "78a35f76-2217-4f32-8ca9-fb3ccae85717",
+      "name": "Load Test Users",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -5024,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Process ALL items using loop\nconst results = [];\n\nfor (let i = 0; i < items.length; i++) {\n  const d = items[i].json;\n  const missing = [];\n  if (!d.name) missing.push('name');\n  if (!d.doctor) missing.push('doctor');\n  if (!d.date) missing.push('date');\n  if (!d.time) missing.push('time');\n  if (!d.phone) missing.push('phone');\n\n  if (missing.length > 0) {\n    results.push({ json: { status: 'error', text: 'Missing fields: ' + missing.join(', '), name: d.name || 'Unknown' } });\n  } else {\n    results.push({ json: { status: 'valid', name: d.name, doctor: d.doctor, date: d.date, time: d.time, phone: d.phone } });\n  }\n}\n\nreturn results;"
+      },
+      "id": "9a6ab5f5-e215-4121-b547-bea538b8d9aa",
+      "name": "Validate",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -4784,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "if-error-condition",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9072f67c-f54a-400f-a0e2-c75e59a8b090",
+      "name": "IF Error",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -4544,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Process ALL items using loop\nconst store = this.getWorkflowStaticData('global');\n\nif (!store.bookings) {\n  store.bookings = [];\n}\n\nconst results = [];\n\nfor (let i = 0; i < items.length; i++) {\n  const data = items[i].json;\n\n  const exists = store.bookings.find(function(b) {\n    return b.doctor === data.doctor && b.date === data.date && b.time === data.time;\n  });\n\n  if (exists) {\n    results.push({\n      json: {\n        status: 'duplicate',\n        text: 'Slot Already Booked! Doctor: ' + data.doctor + ' | Date: ' + data.date + ' | Time: ' + data.time + ' | Originally booked by: ' + exists.name + ' | Requested by: ' + data.name\n      }\n    });\n  } else {\n    store.bookings.push(data);\n    results.push({\n      json: {\n        status: 'confirmed',\n        text: 'Appointment Confirmed! Name: ' + data.name + ' | Doctor: ' + data.doctor + ' | Date: ' + data.date + ' | Time: ' + data.time + ' | Phone: ' + data.phone\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "id": "cce5a9f4-1a0d-4efc-b18f-6518a963ec74",
+      "name": "Check Slot",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -4304,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "if-confirmed-condition",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "confirmed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2678ff38-acbe-4e34-89a7-7dc11d0dbf68",
+      "name": "IF Confirmed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -4064,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "8718656802",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "id": "5d3f1034-9df9-4669-a8b7-d95e41e375fe",
+      "name": "Telegram - Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -4240,
+        -544
+      ],
+      "webhookId": "86424028-3e0d-43e7-ac16-8d1db2362079",
+      "credentials": {
+        "telegramApi": {
+          "id": "vnDhFbhAIjPqcHfh",
+          "name": "Tech_legends"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tharan604@gmail.com",
+        "subject": "Appointment Error - Missing Fields",
+        "message": "={{ $json.text }}",
+        "options": {}
+      },
+      "id": "8cf4219e-dab5-49d0-a2b5-5c5eb29d68a2",
+      "name": "Gmail - Error",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        -4000,
+        -448
+      ],
+      "webhookId": "8244c447-5a2e-4ed9-9ef1-cc0b23f75e1d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "IvHmpTzf3a9dahN6",
+          "name": "Gmail_N8N"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8718656802",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "id": "c1a4f7f7-b9ba-4dce-b0bd-449fbc2554e5",
+      "name": "Telegram - Confirmed",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -3824,
+        -320
+      ],
+      "webhookId": "c86281fc-42ef-41e8-a6bd-f518b30e5675",
+      "credentials": {
+        "telegramApi": {
+          "id": "vnDhFbhAIjPqcHfh",
+          "name": "Tech_legends"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tharan604@gmail.com",
+        "subject": "Appointment Confirmed",
+        "message": "={{ $json.text }}",
+        "options": {}
+      },
+      "id": "2321e1c1-32c5-4849-a884-63f56c684c6f",
+      "name": "Gmail - Confirmed",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        -3584,
+        -208
+      ],
+      "webhookId": "4a0394e7-54ab-4036-9942-89102447f5b3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "IvHmpTzf3a9dahN6",
+          "name": "Gmail_N8N"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8718656802",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "id": "a44cf97e-d813-4bb4-960d-a8756f7506c6",
+      "name": "Telegram - Duplicate",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -3840,
+        160
+      ],
+      "webhookId": "e7f33a7c-fe8c-4e92-b93e-1a7d3b8ca192",
+      "credentials": {
+        "telegramApi": {
+          "id": "vnDhFbhAIjPqcHfh",
+          "name": "Tech_legends"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tharan604@gmail.com",
+        "subject": "Duplicate Booking - Slot Already Taken",
+        "message": "={{ $json.text }}",
+        "options": {}
+      },
+      "id": "163bc460-4819-43e1-97c1-c1272ebe93d4",
+      "name": "Gmail - Duplicate",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        -3584,
+        96
+      ],
+      "webhookId": "a7972a02-3208-41eb-9dcc-4fcfa1affdca",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "IvHmpTzf3a9dahN6",
+          "name": "Gmail_N8N"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Load Test Users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Test Users": {
+      "main": [
+        [
+          {
+            "node": "Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate": {
+      "main": [
+        [
+          {
+            "node": "IF Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Error": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Error",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail - Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Slot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Slot": {
+      "main": [
+        [
+          {
+            "node": "IF Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Confirmed": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Confirmed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail - Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Duplicate",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail - Duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "19ed8669-f344-483b-8aee-5ed91b3eabc6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1408251901c310521e02b0893d7e629baeb7bf81f6971d0f0d13f227f322ea33"
+  },
+  "id": "pXN7qOIYjMh20IuM",
+  "tags": []
+}
