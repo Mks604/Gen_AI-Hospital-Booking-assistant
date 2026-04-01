@@ -3,16 +3,13 @@
 📌 Overview
 
 This project is a fully automated Hospital Appointment Booking System built using n8n.
-
 It simulates real-world booking scenarios and handles:
 
 ✅ Appointment validation
-
 ⚠️ Missing data detection
-
 🔁 Duplicate slot prevention
-
 📩 Real-time notifications (Telegram + Gmail)
+
 
 ⚡ Key Highlights
 
@@ -38,6 +35,8 @@ POST /webhook/book-appointment
 
 Starts the workflow
 
+
+
 2️⃣ Load Test Users
 
 Simulates 3 scenarios:
@@ -47,6 +46,8 @@ Simulates 3 scenarios:
 ⚠️ Missing field
 
 🔁 Duplicate booking
+
+
 
 3️⃣ Validation Node
 
@@ -58,6 +59,7 @@ Date
 Time
 Phone
 
+
 👉 Missing fields → Error Flow
 
 4️⃣ Error Flow
@@ -67,6 +69,8 @@ Sends alert via:
 📲 Telegram
 
 📧 Gmail
+
+
 
 5️⃣ Slot Check Logic
 
@@ -80,6 +84,7 @@ Date
 
 Time
 
+
 6️⃣ Decision Outcomes
 | Scenario       | Result    | Action |
 | -------------- | --------- | ------ |
@@ -88,8 +93,8 @@ Time
 | ✅ Valid        | Confirmed | Notify |
 
 
-📩 Notification System
 
+📩 Notification System
 📲 Telegram
 
 Instant alerts
@@ -101,6 +106,7 @@ Duplicate warnings
 Error reports
 Appointment confirmations
 Duplicate notifications
+
 
 🧪 Sample API Request
 {
@@ -129,6 +135,7 @@ hospital-appointment-n8n/
 └── config/
     └── credentials-guide.md
 
+
 ⚙️ Setup Instructions
 
 🔧 Step 1: Import Workflow
@@ -137,31 +144,36 @@ Open n8n
 Click Import
 Paste JSON file
 
+
 🔐 Step 2: Configure Credentials
 
 Telegram Bot API
 Gmail OAuth2
+
 
 ▶️ Step 3: Activate Workflow
 
 Enable workflow
 Copy webhook URL
 
+
 🧪 Step 4: Test API
 
 curl -X POST http://localhost:5678/webhook/book-appointment
 
+
 📌 Important Notes
 
 ⚠️ Data resets on each execution (demo purpose)
+
 🧠 Uses in-memory storage (no database)
+
 🔁 Designed for testing multiple scenarios
 
 
 
 Kumar K
 
-⭐ Show Your Support
 
 <img width="2273" height="2243" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/e82599b5-92a5-44cd-a857-9334beeb86a5" />
 
