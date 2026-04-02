@@ -13,15 +13,15 @@ It simulates real-world booking scenarios and handles:
 
 ⚡ Key Highlights
 
-✨ No-code + low-code automation
+✔️ No-code + low-code automation
 
-🧠 Smart validation logic
+✔️ Smart validation logic
 
-🔄 Duplicate detection using memory
+✔️ Duplicate detection using memory
 
-📡 Webhook-based API system
+✔️ Webhook-based API system
 
-📲 Multi-channel notifications
+✔️ Multi-channel notifications
 
 
 
@@ -66,9 +66,9 @@ Phone
 
 Sends alert via:
 
-📲 Telegram
+✔️ Telegram
 
-📧 Gmail
+✔️ Gmail
 
 
 
@@ -95,7 +95,7 @@ Time
 
 
 📩 Notification System
-📲 Telegram
+✔️ Telegram
 
 Instant alerts
 Booking confirmations
@@ -164,15 +164,21 @@ curl -X POST http://localhost:5678/webhook/book-appointment
 
 📌 Important Notes
 
-⚠️ Data resets on each execution (demo purpose)
+✔️ Data resets on each execution (demo purpose)
 
-🧠 Uses in-memory storage (no database)
+✔️ Uses in-memory storage (no database)
 
-🔁 Designed for testing multiple scenarios
+✔️ Designed for testing multiple scenarios
 
 
 
 Kumar K
+
+MIT License
+
+Copyright (c) 2026 Kumar K
+
+Permission is hereby granted, free of charge, to any person obtaining a copy...
 
 
 <img width="2273" height="2243" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/e82599b5-92a5-44cd-a857-9334beeb86a5" />
